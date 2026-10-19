@@ -1,0 +1,12 @@
+node_modules/
+dist/
+release/
+test-results/
+playwright-report/
+.local/
+*.sqlite*
+*.log
+evaluation-results/
+validation-results/
+__pycache__/
+*.py[cod]

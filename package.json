@@ -1,0 +1,87 @@
+{
+  "name": "opencookie",
+  "version": "0.2.3",
+  "description": "A cookie instead of a whip. Flick to send a little praise to your coding agent.",
+  "private": true,
+  "license": "MIT",
+  "author": "OpenCookie contributors",
+  "type": "module",
+  "main": "dist/src/desktop/boot.cjs",
+  "bin": {
+    "opencookie": "bin/opencookie.cjs"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsc && node scripts/copy-assets.mjs",
+    "typecheck": "tsc --noEmit",
+    "start": "npm run build && node scripts/start.mjs",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "test:ui": "npm run build && playwright test",
+    "test:desktop": "npm run build && node scripts/desktop-smoke.mjs",
+    "test:portal": "npm run build && node scripts/portal-smoke.mjs",
+    "test:wayland-desktop": "npm run build && node scripts/wayland-desktop-smoke.mjs",
+    "check": "npm run typecheck && npm test && npm run test:ui",
+    "package": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder"
+  },
+  "build": {
+    "appId": "dev.opencookie.desktop",
+    "productName": "OpenCookie",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/src/**/*",
+      "package.json",
+      "assets/**/*",
+      "LICENSE"
+    ],
+    "asar": true,
+    "linux": {
+      "executableArgs": [
+        "--ozone-platform=x11"
+      ],
+      "target": [
+        "AppImage"
+      ],
+      "category": "Development",
+      "icon": "assets/icon.png",
+      "maintainer": "OpenCookie contributors"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.developer-tools",
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "asarUnpack": [
+      "node_modules/koffi/**/*",
+      "dist/src/desktop/wayland.py"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.20.5",
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3",
+    "typescript": "7.0.2"
+  },
+  "dependencies": {
+    "koffi": "3.3.3"
+  }
+}
